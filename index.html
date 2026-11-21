@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LearnSphere | منصة التعلم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #080c18;
+    --surface: #0e1324;
+    --surface-2: #151d35;
+    --border: #1e2942;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --electric: #2563eb;
+    --violet: #7c3aed;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --radius: 20px;
+    --shadow: 0 8px 30px -10px rgba(0, 0, 0, .5);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: "Cairo", "Inter", system-ui, sans-serif;
+    background: radial-gradient(1200px 600px at 80% -10%, rgba(124,58,237,.18), transparent 60%),
+                radial-gradient(900px 500px at -10% 10%, rgba(37,99,235,.18), transparent 60%),
+                var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  a { color: inherit; }
+  header {
+    position: sticky; top: 0; z-index: 10;
+    backdrop-filter: blur(12px);
+    background: rgba(8,12,24,.7);
+    border-bottom: 1px solid var(--border);
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { font-weight: 800; font-size: 20px; background: linear-gradient(135deg, var(--electric), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--text);
+    padding: 11px 20px; border-radius: 14px; font: inherit; font-weight: 700; cursor: pointer;
+    transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease, opacity .2s;
+  }
+  .btn:hover { border-color: rgba(37,99,235,.5); transform: translateY(-1px); }
+  .btn:active { transform: scale(.98); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  .btn-primary { border: 0; background: linear-gradient(135deg, var(--electric), var(--violet)); box-shadow: 0 10px 30px -10px rgba(37,99,235,.7); }
+  .btn-primary:hover { box-shadow: 0 14px 36px -10px rgba(124,58,237,.8); border-color: transparent; }
+
+  .hero { padding: 72px 0 40px; text-align: center; }
+  .hero h1 { font-size: clamp(30px, 5vw, 48px); font-weight: 800; margin: 0 0 12px; line-height: 1.3; }
+  .hero p { color: var(--muted); font-size: 18px; max-width: 640px; margin: 0 auto 26px; }
+
+  .grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); padding: 20px 0 80px; }
+  .card {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 26px;
+    box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 14px;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s;
+  }
+  .card:hover { transform: translateY(-4px); border-color: rgba(124,58,237,.45); box-shadow: 0 20px 50px -20px rgba(124,58,237,.45); }
+  .badge { align-self: flex-start; font-size: 12px; color: #c4b5fd; background: rgba(124,58,237,.15); border: 1px solid rgba(124,58,237,.35); padding: 3px 10px; border-radius: 999px; }
+  .card h3 { margin: 0; font-size: 19px; font-weight: 700; }
+  .price { font-size: 22px; font-weight: 800; }
+  .price small { font-size: 13px; color: var(--muted); font-weight: 600; margin-inline-start: 4px; }
+  .card .btn { margin-top: auto; }
+
+  /* Modal */
+  .overlay { position: fixed; inset: 0; background: rgba(2,4,12,.7); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 50; }
+  .overlay.open { display: flex; animation: fade .2s ease; }
+  .modal { width: 100%; max-width: 460px; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 28px; box-shadow: var(--shadow); animation: rise .25s ease; }
+  .modal h2 { margin: 0 0 6px; font-size: 22px; }
+  .modal .sub { color: var(--muted); margin: 0 0 18px; font-size: 14px; }
+  label { display: block; font-size: 13px; color: var(--muted); margin: 12px 0 6px; }
+  input {
+    width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--text); font: inherit; outline: none; direction: ltr; text-align: start;
+  }
+  input:focus { border-color: var(--electric); box-shadow: 0 0 0 3px rgba(37,99,235,.25); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .error { color: #fca5a5; font-size: 13px; min-height: 20px; margin-top: 10px; }
+  .actions { display: flex; gap: 10px; margin-top: 16px; }
+  .actions .btn { flex: 1; }
+  .close { position: absolute; top: 14px; inset-inline-end: 14px; background: none; border: 0; color: var(--muted); font-size: 22px; cursor: pointer; }
+  .modal { position: relative; }
+
+  /* Status / return page */
+  .panel { max-width: 720px; margin: 60px auto; padding: 32px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+  .lesson { border-top: 1px solid var(--border); padding: 16px 0; }
+  .lesson h4 { margin: 0 0 4px; }
+  .lesson p { margin: 0; color: var(--muted); }
+  .spinner { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--border); border-top-color: var(--electric); animation: spin 1s linear infinite; margin: 10px auto; }
+  .hidden { display: none !important; }
+  .center { text-align: center; }
+  .skeleton { background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 50%, var(--surface-2) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 12px; height: 18px; margin: 8px 0; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @media (max-width: 560px) { .row { grid-template-columns: 1fr; } .hero { padding: 48px 0 24px; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <span class="logo">LearnSphere</span>
+    <a class="btn" href="#courses">الدورات</a>
+  </div>
+</header>
+
+<main id="home">
+  <section class="wrap hero">
+    <h1>تعلّم مهارات تصميم وتطوير حقيقية</h1>
+    <p>دورات عملية من الصفر، ادفع بأمان عبر بوابة دفع مصرية معتمدة، واحصل على المحتوى فور تأكيد الدفع.</p>
+    <a class="btn btn-primary" href="#courses">تصفح الدورات</a>
+  </section>
+
+  <section class="wrap" id="courses">
+    <div class="grid" id="course-grid"></div>
+  </section>
+</main>
+
+<!-- Checkout modal -->
+<div class="overlay" id="checkout" role="dialog" aria-modal="true" aria-labelledby="checkout-title">
+  <div class="modal">
+    <button class="close" type="button" data-close aria-label="إغلاق">×</button>
+    <h2 id="checkout-title">إتمام الشراء</h2>
+    <p class="sub" id="checkout-course"></p>
+    <form id="checkout-form" novalidate>
+      <div class="row">
+        <div><label for="first">الاسم الأول</label><input id="first" name="firstName" autocomplete="given-name" required /></div>
+        <div><label for="last">اسم العائلة</label><input id="last" name="lastName" autocomplete="family-name" required /></div>
+      </div>
+      <label for="email">البريد الإلكتروني</label>
+      <input id="email" name="email" type="email" autocomplete="email" required />
+      <label for="phone">رقم الهاتف (مصري أو دولي)</label>
+      <input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+201000000000" required />
+      <div class="error" id="form-error" role="alert"></div>
+      <div class="actions">
+        <button class="btn" type="button" data-close>إلغاء</button>
+        <button class="btn btn-primary" type="submit" id="pay-btn">الدفع الآن</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Order return page -->
+<section class="wrap hidden" id="return">
+  <div class="panel" id="return-panel">
+    <h2 class="center">جاري التحقق من الدفع…</h2>
+    <div class="spinner" id="return-spinner"></div>
+    <p class="center" id="return-text">يرجى الانتظار، لا تغلق هذه الصفحة.</p>
+    <div id="return-lessons"></div>
+  </div>
+</section>
+
+<script>
+(() => {
+  // Display copy only. The server holds the real prices and content.
+  const COURSES = [
+    { id: "design-101", title: "أساسيات تصميم الهوية البصرية", price: 499, level: "مبتدئ" },
+    { id: "web-201", title: "بناء تطبيق ويب كامل بملف واحد", price: 799, level: "متوسط" },
+  ];
+
+  const $ = (sel) => document.querySelector(sel);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  // ----- Storefront -----
+  const grid = $("#course-grid");
+  grid.innerHTML = COURSES.map((c) => `
+    <article class="card">
+      <span class="badge">${esc(c.level)}</span>
+      <h3>${esc(c.title)}</h3>
+      <div class="price">${c.price} <small>جنيه مصري</small></div>
+      <button class="btn btn-primary" data-buy="${esc(c.id)}">اشترِ الآن</button>
+    </article>`).join("");
+
+  // ----- Checkout modal -----
+  const modal = $("#checkout");
+  const form = $("#checkout-form");
+  const errorBox = $("#form-error");
+  const payBtn = $("#pay-btn");
+  let activeCourse = null;
+
+  function openModal(courseId) {
+    activeCourse = COURSES.find((c) => c.id === courseId);
+    if (!activeCourse) return;
+    $("#checkout-course").textContent = activeCourse.title;
+    errorBox.textContent = "";
+    modal.classList.add("open");
+    $("#first").focus();
+  }
+  function closeModal() { modal.classList.remove("open"); }
+
+  grid.addEventListener("click", (e) => {
+    const id = e.target.closest("[data-buy]")?.dataset.buy;
+    if (id) openModal(id);
+  });
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal || e.target.closest("[data-close]")) closeModal();
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+
+  function validate(data) {
+    if (!data.firstName.trim() || !data.lastName.trim()) return "الاسم الأول والأخير مطلوبان.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return "البريد الإلكتروني غير صحيح.";
+    if (!/^\+?[0-9]{10,15}$/.test(data.phone.replace(/\s/g, ""))) return "رقم الهاتف غير صحيح.";
+    return null;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const data = {
+      firstName: String(fd.get("firstName") || ""),
+      lastName: String(fd.get("lastName") || ""),
+      email: String(fd.get("email") || "").trim(),
+      phone: String(fd.get("phone") || "").replace(/\s/g, ""),
+    };
+    const problem = validate(data);
+    if (problem) { errorBox.textContent = problem; return; }
+
+    payBtn.disabled = true;
+    payBtn.textContent = "جاري التحويل للدفع…";
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ courseId: activeCourse.id, ...data }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok || !body.iframeUrl) throw new Error(body.error || "payment_failed");
+      // Redirect to Paymob's hosted payment page. Access is granted only after the webhook confirms payment.
+      window.location.href = body.iframeUrl;
+    } catch (err) {
+      errorBox.textContent = "تعذّر بدء عملية الدفع. حاول مرة أخرى بعد قليل.";
+      payBtn.disabled = false;
+      payBtn.textContent = "الدفع الآن";
+    }
+  });
+
+  // ----- Return page: poll the server until the webhook marks the order paid -----
+  const params = new URLSearchParams(window.location.search);
+  // Paymob appends merchant_order_id (our order UUID) to the redirect URL.
+  const orderId = params.get("merchant_order_id") || params.get("order");
+  if (orderId) {
+    $("#home").classList.add("hidden");
+    $("#courses").classList.add("hidden");
+    $("#return").classList.remove("hidden");
+    pollOrder(orderId);
+  }
+
+  async function pollOrder(id, attempt = 0) {
+    const panel = $("#return-panel");
+    try {
+      const res = await fetch(`/api/order-status?id=${encodeURIComponent(id)}`);
+      const body = await res.json();
+      if (body.status === "paid") {
+        $("#return-spinner").classList.add("hidden");
+        panel.querySelector("h2").textContent = "تم الدفع بنجاح ✓";
+        $("#return-text").textContent = `مرحباً بك في: ${body.courseTitle}`;
+        $("#return-lessons").innerHTML = (body.lessons || []).map((l, i) => `
+          <div class="lesson"><h4>${i + 1}. ${esc(l.title)}</h4><p>${esc(l.content)}</p></div>`).join("");
+        return;
+      }
+      if (body.status === "failed") {
+        $("#return-spinner").classList.add("hidden");
+        panel.querySelector("h2").textContent = "لم تكتمل عملية الدفع";
+        $("#return-text").innerHTML = `<a href="/">العودة للدورات</a>`;
+        return;
+      }
+    } catch (_) { /* network blip: keep polling */ }
+    if (attempt < 40) setTimeout(() => pollOrder(id, attempt + 1), 3000);
+    else {
+      $("#return-spinner").classList.add("hidden");
+      $("#return-text").textContent = "لم نستلم تأكيد الدفع بعد. إذا خُصم المبلغ، تواصل معنا وأرسل رقم الطلب.";
+    }
+  }
+})();
+</script>
+</body>
+</html>

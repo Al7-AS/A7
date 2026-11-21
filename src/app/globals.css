@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------
+   Design tokens. Values are RGB triplets so Tailwind opacity works.
+   Dark is the default brand surface; light surfaces are used for
+   content areas. Override per-tenant via brand_settings later.
+   ------------------------------------------------------------------ */
+:root {
+  --ink-950: 248 250 252;   /* page background (light) */
+  --ink-900: 241 245 249;   /* section background */
+  --ink-800: 226 232 240;   /* borders */
+  --ink-700: 203 213 225;
+  --ink-500: 100 116 139;   /* muted text */
+  --ink-300: 51 65 85;
+  --ink-100: 15 23 42;      /* primary text */
+
+  --electric: 37 99 235;
+  --electric-soft: 219 234 254;
+  --violet: 124 58 237;
+  --violet-soft: 237 233 254;
+  --success: 22 163 74;
+  --warning: 217 119 6;
+  --danger: 220 38 38;
+}
+
+[data-theme="dark"],
+:root:not([data-theme="light"]) {
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink-950: 8 12 24;
+    --ink-900: 14 19 36;
+    --ink-800: 30 41 66;
+    --ink-700: 51 65 99;
+    --ink-500: 148 163 184;
+    --ink-300: 203 213 225;
+    --ink-100: 241 245 249;
+    --electric-soft: 30 58 138;
+    --violet-soft: 76 29 149;
+  }
+}
+
+[data-theme="dark"] {
+  --ink-950: 8 12 24;
+  --ink-900: 14 19 36;
+  --ink-800: 30 41 66;
+  --ink-700: 51 65 99;
+  --ink-500: 148 163 184;
+  --ink-300: 203 213 225;
+  --ink-100: 241 245 249;
+  --electric-soft: 30 58 138;
+  --violet-soft: 76 29 149;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-ink-950 text-ink-100 font-sans antialiased;
+  }
+  /* Arabic typography: slightly looser line-height for readability */
+  html[dir="rtl"] body {
+    @apply font-arabic leading-relaxed;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-electric ring-offset-2 ring-offset-ink-950;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-card border border-ink-800 bg-ink-900 shadow-soft transition-all duration-300;
+  }
+  .card-interactive {
+    @apply card hover:-translate-y-0.5 hover:shadow-glow;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-gradient px-5 py-2.5 text-sm font-semibold text-white shadow-soft transition hover:opacity-95 active:scale-[0.98] disabled:opacity-50;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-ink-800 bg-ink-900 px-5 py-2.5 text-sm font-semibold text-ink-100 transition hover:border-electric/40 active:scale-[0.98];
+  }
+  .skeleton {
+    @apply animate-pulse rounded-lg bg-ink-800;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
